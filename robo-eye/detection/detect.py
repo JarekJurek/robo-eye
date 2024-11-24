@@ -44,7 +44,7 @@ def visualize_results(results, vis_dir, image_name):
 
 
 if __name__ == "__main__":
-    data_dir = Path(__file__).parent.parent.parent / "datasets" / "seq_02" / "train"
+    data_dir = Path(__file__).parent.parent.parent / "datasets" / "combo" / "test"
     image_dir = data_dir / 'images'
     output_dir = Path(__file__).parent / 'predictions'
     vis_dir = Path(output_dir) / 'visualizations'
@@ -57,7 +57,8 @@ if __name__ == "__main__":
     if not Path(output_dir).exists():
         os.makedirs(output_dir, exist_ok=True)
 
-    model = YOLO('yolo11n.pt')
+    # model = YOLO('yolo11n.pt')
+    model = YOLO('/zhome/a2/c/213547/robo-eye/runs/detect/train/weights/best.pt')
 
     for image_path in Path(image_dir).glob('*.*'):
         img = cv2.imread(str(image_path))
