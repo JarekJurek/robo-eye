@@ -1,9 +1,7 @@
 import os
-from pathlib import Path
 
 import cv2
 from torch.utils.data import Dataset, DataLoader
-from torchvision import transforms
 from ultralytics import YOLO
 
 
@@ -91,30 +89,9 @@ def train_model(model, dataloader, epochs=10, imgsz=640, lr=0.001):
 
 
 def main():
-    project_dir = Path(__file__).parent
-    base_data_dir = project_dir / "34759_final_project_rect"
-
-    transform = transforms.Compose([
-        transforms.ToTensor(),
-        transforms.Resize((640, 640)),
-    ])
-
-    train_loader, test_loader = create_dataloaders(base_data_dir, transform=transform)
-
     model = YOLO('yolo11n.pt')
-
-    # Freeze the backbone for transfer learning
-    for param in model.model.backbone.parameters():
-        param.requires_grad = False
-
-    model = train_model(model, train_loader, epochs=20)
-
-    model.export(path="trained_yolov11.pt")
-
-    # No testing since we don't have test ground-truth labels
-    # for images, annotations in test_loader:
-    #     detections = model(images)
-    #     print("Detections:", detections)
+    model.train(data="dataset.yaml", epochs=1, imgsz=640)
+    model.export()
 
 
 if __name__ == "__main__":
