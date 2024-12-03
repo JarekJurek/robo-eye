@@ -149,11 +149,7 @@ def draw_bounding_boxes(image, labels, class_names, img_width, img_height, label
 
 
 if __name__ == "__main__":
-<<<<<<< Updated upstream:robo-eye/detection/misc/visualize_yolo.py
     data_dir = Path(__file__).parent.parent.parent.parent / "datasets" / "seq_02" / "train"
-=======
-    data_dir = Path(__file__).parent.parent.parent / "datasets" / "combo" / "test"
->>>>>>> Stashed changes:robo-eye/detection/visualize_yolo.py
     labels_dir = data_dir / 'labels'
     predicted_labels_dir = Path(__file__).parent / 'predictions' / 'labels_px'
     class_names = ["Pedestrian", "Cyclist", "Car"]

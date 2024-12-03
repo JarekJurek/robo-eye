@@ -31,36 +31,8 @@ The project aims to address the following issues:
    - Calibration and rectification of stereo cameras using provided patterns.
    - Comparison of custom rectification results with pre-rectified data.
 
-## Project Data
-
-The project provides three data sequences for development and testing:
-1. **Sequence 1**: Stereo images with pedestrians and cyclists, including ground truth data (bounding boxes and depth).
-2. **Sequence 2**: Stereo images with pedestrians, cyclists, and cars, with occlusion scenarios and ground truth data.
-3. **Sequence 3**: Stereo images with pedestrians, cyclists, and cars under occlusion, but without ground truth data.
-
 ## Goals and Milestones
 
 - **3D Tracking and Detection**: Achieve robust tracking of objects in rectified stereo images.
 - **Object Classification**: Train a machine learning model and validate it using provided sequences. Test it on unseen data.
 - **Stereo Camera Rectification**: Perform stereo camera calibration and compare results to the pre-rectified data.
-
-## Deliverables
-
-1. **Codebase**: Comprehensive implementation of the detection, tracking, and classification algorithms.
-2. **Report**: A detailed project report summarizing methods, results, and conclusions.
-3. **Demo Video**: A video showcasing the project's outcomes.
-4. **Model Training Data**: A curated and augmented dataset used for classification.
-
-## Getting Started
-
-### Prerequisites
-- Python 3.x
-- OpenCV
-- PyTorch/TensorFlow
-- Calibration pattern images (provided with the dataset)
-
-### Installation
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/yourusername/robo-eye.git
-   cd robo-eye
