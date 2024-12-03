@@ -118,20 +118,20 @@ def draw_bounding_boxes(image, labels, class_names, img_width, img_height, label
         class_id = label["class_id"]
         bbox = label["bbox"]
 
-        # Convert normalized coordinates to absolute pixel coordinates
+        # Bounding box values are in pixels directly
         x_center, y_center, width, height = bbox
-        x1 = int((x_center - width / 2) * img_width)
-        y1 = int((y_center - height / 2) * img_height)
-        x2 = int((x_center + width / 2) * img_width)
-        y2 = int((y_center + height / 2) * img_height)
+        x1 = int(x_center - width / 2)
+        y1 = int(y_center - height / 2)
+        x2 = int(x_center + width / 2)
+        y2 = int(y_center + height / 2)
 
         if 0 <= class_id < len(class_names):
             class_label = class_names[class_id]
         else:
             class_label = f"Class {class_id}"
 
-        if label_type == "PRED" and "prob" in label:
-            class_label += f" ({label['prob']:.2f})"
+        # if label_type == "PRED" and "prob" in label:
+        #     class_label += f" ({label['prob']:.2f})"
 
         color = (0, 255, 0)
         if class_id == 0:  # Pedestrian
@@ -145,13 +145,17 @@ def draw_bounding_boxes(image, labels, class_names, img_width, img_height, label
         cv2.rectangle(image, (x1, y1), (x2, y2), color, 2)
 
         # Draw the class label
-        cv2.putText(image, f"{label_type}: {class_label}", (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
+        cv2.putText(image, f"{class_label}", (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
 
 
 if __name__ == "__main__":
+<<<<<<< Updated upstream:robo-eye/detection/misc/visualize_yolo.py
     data_dir = Path(__file__).parent.parent.parent.parent / "datasets" / "seq_02" / "train"
+=======
+    data_dir = Path(__file__).parent.parent.parent / "datasets" / "combo" / "test"
+>>>>>>> Stashed changes:robo-eye/detection/visualize_yolo.py
     labels_dir = data_dir / 'labels'
-    predicted_labels_dir = Path(__file__).parent / 'predictions' / 'labels'
+    predicted_labels_dir = Path(__file__).parent / 'predictions' / 'labels_px'
     class_names = ["Pedestrian", "Cyclist", "Car"]
 
     # Set label_type to either 'GT' or 'PRED'
