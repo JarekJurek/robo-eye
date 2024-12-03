@@ -6,7 +6,7 @@
 #BSUB -gpu "num=1:mode=exclusive_process"
 
 ### --------------- specify job name ------------------
-#BSUB -J robo_eye
+#BSUB -J newTrain
 
 ### --------------- specify number of cores -----------
 #BSUB -n 4
@@ -19,10 +19,9 @@
 #BSUB -W 12:00
 
 ### --------------- specify output and error files ---------------
-#BSUB -o bake_out%J.out
-#BSUB -e bake_out%J.err
+#BSUB -o newTrain%J.out
+#BSUB -e newTrain%J.err
 
 ### --------------- Load environment and run Python script ---------------
 source /zhome/a2/c/213547/robo-eye/venv/bin/activate
-python /zhome/a2/c/213547/robo-eye/robo-eye/detection/train_model.py
-
+python /zhome/a2/c/213547/robo-eye/robo-eye/detection/train_model2.py

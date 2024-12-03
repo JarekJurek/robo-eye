@@ -58,7 +58,7 @@ if __name__ == "__main__":
         os.makedirs(output_dir, exist_ok=True)
 
     # model = YOLO('yolo11n.pt')
-    model = YOLO('/zhome/a2/c/213547/robo-eye/runs/detect/train/weights/best.pt')
+    model = YOLO('/zhome/a2/c/213547/robo-eye/runs/detect/train2/weights/best.pt')
 
     for image_path in Path(image_dir).glob('*.*'):
         img = cv2.imread(str(image_path))
