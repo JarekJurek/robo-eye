@@ -120,10 +120,17 @@ def draw_bounding_boxes(image, labels, class_names, img_width, img_height, label
 
         # Bounding box values are in pixels directly
         x_center, y_center, width, height = bbox
-        x1 = int(x_center - width / 2)
-        y1 = int(y_center - height / 2)
-        x2 = int(x_center + width / 2)
-        y2 = int(y_center + height / 2)
+
+        # when bboxes are in pixels
+        # x1 = int(x_center - width / 2)
+        # y1 = int(y_center - height / 2)
+        # x2 = int(x_center + width / 2)
+        # y2 = int(y_center + height / 2)
+
+        x1 = int((x_center - width / 2) * img_width)
+        y1 = int((y_center - height / 2) * img_height)
+        x2 = int((x_center + width / 2) * img_width)
+        y2 = int((y_center + height / 2) * img_height)
 
         if 0 <= class_id < len(class_names):
             class_label = class_names[class_id]
@@ -148,13 +155,73 @@ def draw_bounding_boxes(image, labels, class_names, img_width, img_height, label
         cv2.putText(image, f"{class_label}", (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
 
 
+def create_labeled_video(data_dir, labels_dir, class_names, label_type="GT", output_path="labeled_video.avi", fps=30):
+    """
+    Create a video with bounding boxes and labels visualized for all images in the dataset.
+    Args:
+        data_dir (Path): Path to the directory containing 'images' subdirectory.
+        labels_dir (Path): Path to the directory with ground truth or prediction labels.
+        class_names (list): List of class names corresponding to class IDs.
+        label_type (str): Type of labels to visualize ('GT' for ground truth, 'PRED' for predictions).
+        output_path (str): Path to save the output video file.
+        fps (int): Frames per second for the video.
+    """
+    images_dir = data_dir / 'images'
+
+    # Sort files in chronological order
+    image_files = sorted(
+        [f for f in os.listdir(images_dir) if f.endswith(".png")],
+        key=lambda x: int(os.path.splitext(x)[0])
+    )
+
+    # Initialize video writer
+    sample_image_path = images_dir / image_files[0]
+    sample_image = cv2.imread(str(sample_image_path))
+    height, width, _ = sample_image.shape
+    fourcc = cv2.VideoWriter_fourcc(*'XVID')
+    video_writer = cv2.VideoWriter(output_path, fourcc, fps, (width, height))
+
+    for file_name in image_files:
+        image_path = images_dir / file_name
+        label_path = labels_dir / (os.path.splitext(file_name)[0] + ".txt")
+
+        image = cv2.imread(str(image_path))
+        if image is None:
+            print(f"Failed to load image: {image_path}")
+            continue
+
+        img_height, img_width = image.shape[:2]
+
+        labels = (
+            load_prediction_labels(label_path)
+            if label_type == "PRED"
+            else load_ground_truth_labels(label_path)
+        )
+
+        draw_bounding_boxes(image, labels, class_names, img_width, img_height, label_type)
+
+        video_writer.write(image)
+
+    video_writer.release()
+    print(f"Video saved at {output_path}")
+
+
 if __name__ == "__main__":
-    data_dir = Path(__file__).parent.parent.parent.parent / "datasets" / "seq_02" / "train"
+    data_dir = Path(__file__).parent.parent.parent.parent / "datasets" / "combo" / "test"
     labels_dir = data_dir / 'labels'
-    predicted_labels_dir = Path(__file__).parent / 'predictions' / 'labels_px'
+    predicted_labels_dir = Path(__file__).parent.parent / 'predictions' / 'labels_filtered'
     class_names = ["Pedestrian", "Cyclist", "Car"]
 
     # Set label_type to either 'GT' or 'PRED'
     label_type = "PRED"
 
-    visualize_labels(data_dir, labels_dir if label_type == "GT" else predicted_labels_dir, class_names, label_type)
+    # visualize_labels(data_dir, labels_dir if label_type == "GT" else predicted_labels_dir, class_names, label_type)
+
+    create_labeled_video(
+        data_dir,
+        labels_dir if label_type == "GT" else predicted_labels_dir,
+        class_names,
+        label_type,
+        output_path="labeled_video.mp4",
+        fps=30
+    )
